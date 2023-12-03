@@ -1,0 +1,74 @@
+import React, { useState } from 'react';
+
+const BookingForm = () => {
+  const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
+  const [partySize, setPartySize] = useState(1);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    // Send the booking information to the server
+    fetch('/api/bookings', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        date,
+        time,
+        partySize,
+        name,
+        email,
+        phoneNumber,
+      }),
+    }).then(() => {
+      // Clear the form fields
+      setDate('');
+      setTime('');
+      setPartySize(1);
+      setName('');
+      setEmail('');
+      setPhoneNumber('');
+
+      // Show a success message
+      alert('Your booking has been confirmed!');
+    });
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <label htmlFor="date">Date:</label>
+      <input type="date" id="date" value={date} onChange={(event) => setDate(event.target.value)} required />
+
+      <label htmlFor="time">Time:</label>
+      <select id="time" value={time} onChange={(event) => setTime(event.target.value)} required>
+        <option value="">Please select a time</option>
+        <option value="17:00">17:00</option>
+        <option value="17:30">17:30</option>
+        <option value="18:00">18:00</option>
+        <option value="18:30">18:30</option>
+        <option value="19:00">19:00</option>
+      </select>
+
+      <label htmlFor="partySize">Party size:</label>
+      <input type="number" id="partySize" value={partySize} onChange={(event) => setPartySize(event.target.value)} min={1} required />
+
+      <label htmlFor="name">Name:</label>
+      <input type="text" id="name" value={name} onChange={(event) => setName(event.target.value)} required />
+
+      <label htmlFor="email">Email:</label>
+      <input type="email" id="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
+
+      <label htmlFor="phoneNumber">Phone number:</label>
+      <input type="tel" id="phoneNumber" value={phoneNumber} onChange={(event) => setPhoneNumber(event.target.value)} required />
+
+      <button type="submit">Book table</button>
+    </form>
+  );
+};
+
+export default BookingForm;
